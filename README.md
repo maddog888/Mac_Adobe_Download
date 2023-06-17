@@ -7,8 +7,7 @@
 ## 如何使用它
 
 1. 为使脚本运行，必须安装 Creative Cloud 应用程序。
-
-2.在终端运行bash ainstall.sh 即可。
+2. 下载后在终端运行bash ainstall.sh 即可。
 
 主要使用 Ainco 配合使用。
 
