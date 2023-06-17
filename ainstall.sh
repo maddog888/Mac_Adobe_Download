@@ -2,10 +2,12 @@
 
 # 2023 年 6 月 17 日 By:MadDog
 # https://github.com/maddog888/Mac_Adobe_Download/
+# 使用路径 *.app/Contents/Resources/products/
 
 # 输出声明信息
 echo "免责声明："
 echo "本脚本仅供学习参考，不可用于其他用途，否则自行承担相应的法律责任。"
+
 #获取 CDN 服务器
 if [ -z "$1" ]; then
   cdn="https://ccmdls.adobe.com"
@@ -13,6 +15,7 @@ else
   cdn="$1"
 fi
 
+echo "开始扫描 Json ...... 。"
 # 获取脚本所在文件夹的路径
 scriptDir="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
 
@@ -27,14 +30,17 @@ for dir in "$scriptDir"/*/ ; do
     fi
 done
 
-# /application.json
-# 输出数组中的所有元素
-
-echo "所需相关信息文件:"
+echo "正在读取 相关文件 ...... 。"
+# 读取相关文件信息
 for dir in "${paths[@]}"; do
-  echo "$dir"
-  wget --header="User-Agent: Creative Cloud" "$cdn" -O ~/Pictures/example.jpg
+  # 获取 文件中 的 Path 值
+  path=$(grep -o '"Path":"[^"]*"' "$dir//application.json" | cut -d'"' -f4)
+  # 开始构建下载
+  for p in $path
+    do
+      echo "正在下载文件 $cdn$p"
+      # 下载文件
+      curl -o "$dir/$(basename "$p")" "$cdn/$p" -A "Creative Cloud"
+  done
 done
-
-# Download file from server with headers
-# wget --header="User-Agent: Creative Cloud" "$cdn"+"/123" -O ~/Pictures/example.jpg
+echo "下载完成，现在可以运行安装。"
